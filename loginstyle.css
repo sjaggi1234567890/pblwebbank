@@ -1,0 +1,96 @@
+body{
+    margin: 0;
+    padding: 0;
+    background-image: url("/home/sj1234567890/Desktop/Webapp/assests/pixel-art-background-py9lp3op06u3y3bt.jpg");
+    background-size: cover;
+    font-family: Arial, sans-serif;
+}
+
+.navbar{
+    background-color: rgba(0, 0, 0, 0.8); 
+    color: white;
+    padding: 15px 50px;
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+
+.nav-links a{
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+.nav-links a:hover{
+    color: #00adb5;
+}
+
+.welcome-msg{
+    font-style: italic;
+    color: #00adb5;
+}
+
+.login-form, .create-acc-form{
+    border-radius: 10px;
+    width: 300px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    background: whitesmoke;
+    padding: 30px;
+    margin: 4% auto 0;
+    text-align: center;
+}
+
+.input-box{
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; 
+}
+    
+
+  
+.sign-up-btn, .create-acc{
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+ transition-property: width;
+    transition-duration: 0.9s;
+    transition-timing-function: ease;
+    transition-delay: 0.1s;
+
+
+}
+
+
+.create-acc:hover{
+    width: 101%;
+    
+}
+
+
+.create-acc{
+    background-color: "limegreen";
+}
+
+.create-acc-btn{
+    margin: 10px 0;
+    font-weight: bold;
+    transition-property: width;
+    transition-duration: 0.9s;
+    transition-timing-function: ease;
+    transition-delay: 0.1s;
+}
+
+
+.create-acc-btn{
+     width:400px;
+}

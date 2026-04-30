@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web Banking Login</title>
+    <link rel="stylesheet" type="text/css" href="loginstyle.css">
+</head> 
+<body>
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="#">About Us</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="welcome-msg">
+            Welcome to Online Bank
+        </div>
+    </nav>
+
+    <div class="login-form"> 
+        <h1>Login</h1>
+        <form action="login.php" method="POST"> 
+            <input type="text" name="username" class="input-box" placeholder="Your Username" required> 
+            <br>
+            <input type="password" name="password" class="input-box" placeholder="Your Password" required> 
+            
+            <button type="submit" class="sign-up-btn">Login</button>
+            
+            <hr>
+            
+            <p class="or">OR</p> 
+            <p>Don't have an account?</p>    
+            <br>
+            <a href="createacc.html" class="create-acc-btn" style="text-decoration: none; display: inline-block; padding: 10px; border: 1px solid #ccc; background: #f9f9f9; color: black; border-radius: 5px;">Create Account Now</a>
+        </form>
+    </div>
+</body>
+</html>

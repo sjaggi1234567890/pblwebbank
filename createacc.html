@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head> 
+   
+    <title>Create Account - online Bank</title>
+    <link rel="stylesheet" href="createacc.css">
+</head>
+
+
+<br> <br>
+   <nav class="navbar">
+        <div class="nav-links">
+            <a href="#">About Us</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="welcome-msg">
+            Welcome to online bank
+        </div>
+    </nav>
+<body> 
+    <div class="create-acc-form" style="width: 600px; margin-top: -2%;"> 
+        <h1>Open Account</h1>
+        <form action="register.php" method="POST">
+            
+            <input type="text" name="first_name" class="input-box" placeholder="First Name" required> 
+            <input type="text" name="last_name" class="input-box" placeholder="Last Name" required>
+            <input type="email" name="email" class="input-box" placeholder="Email Address" required>
+            <label style="display:block; text-align:left; font-size:12px; margin-left:10px;">Date of Birth:</label>
+            <input type="date" name="dob" class="input-box" required>
+            
+                                                 <div class="address-row">
+                                               <input type="text" name="city" class="address-input-box" placeholder="City" required>
+                                                     </select>
+
+                                                      <select name="state" class="address-input-box" required>
+                                                          <option value="" disabled selected>Select State</option>
+                                                 <option value="maharashtra">Maharashtra</option> <option value = "goa" >Goa</option>
+                                                <option value="delhi">Delhi</option>
+                                                   <option value="karnataka">Karnataka</option> <option value="tamilnadu">Tamil Nadu</option> <option value="Uttarakhand">Uttarakhand</option> <option value="gujarat">Gujarat</option> <option value="westbengal">West Bengal</option> <option value="haryana">Haryana</option> <option value="punjab">Punjab</option> <option value="rajasthan">Rajasthan</option> <option value="kerala">Kerala</option> <option value="odisha">Odisha</option>
+                                                                 </select>
+
+            <input type="number" name="pincode" class="address-input-box" 
+            placeholder="Pincode" required min="100000" max="999999">
+            </div>
+
+            <input type="text" name="mobile" class="input-box" placeholder="Mobile number  " required>
+            
+            <input type="text" name="pan_card" class="input-box" placeholder="PAN Card Number" required title="10 Alphanumeric characters">
+            
+            <hr>
+            
+            <input type="password" name="password" class="input-box" placeholder="Create Password" required>
+            <input type="password" name="confirm_your_password" class="input-box" placeholder="Confirm Password" required>
+            
+            <button type="submit" target="_top" class="sign-up-btn">Verify & Create Account</button>
+            
+            
+        </form>
+        <p style="margin-top:15px;">Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+
+
+
+           
+
+
+ </body>
+
+</html>
