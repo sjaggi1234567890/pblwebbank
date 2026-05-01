@@ -1,0 +1,9 @@
+# Ignore specific files
+ 
+
+# Ignore entire folders (add a slash at the end)
+my-app/
+
+
+# Ignore specific file types
+*.git

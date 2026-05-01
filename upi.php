@@ -1,63 +1,103 @@
 <?php
-include"dbconnect.php";
+session_start();
+include "dbconnect.php";
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // 1. Check if the name matches the HTML input name
+if (!isset($_SESSION['customer_id'])){
+    header("Location: login.html");
+    exit();
+}
+
+$sender_id = $_SESSION['customer_id'];
+$check_sender = $conn->prepare("SELECT a.account_id, a.balance, a.account_status, c.customer_full_name, a.account_number 
+                                FROM accounts a JOIN customers_basic_info c ON a.customer_id = c.customer_id  WHERE a.customer_id = ?");
+$check_sender->bind_param("i", $sender_id);
+$check_sender->execute();
+$sender_res = $check_sender->get_result();
+
+if ($sender_res->num_rows === 0){
+echo"<script type='text/javascript'>alert('Your account not found from database, contanct admin');</script>";
+    die("Error: Sender account record not found.");
+}
+
+$sender_data = $sender_res->fetch_assoc();
+
+if ($sender_data['account_status'] !== 'active') {
+    echo "<script>alert('Your account is currently " . $sender_data['account_status'] . ". Transactions are disabled.'); window.location.href='dashboard.php';</script>";
+    exit();
+}
+
+
+$personal_data = ['customer_full_name' => $sender_data['customer_full_name']];
+$account_data  = [
+    'account_number' => $sender_data['account_number'],
+    'balance' => $sender_data['balance']
+];
+ 
+if ($_SERVER["REQUEST_METHOD"] == "POST") { 
     $recipient_acc = isset($_POST['recipient_id']) ? mysqli_real_escape_string($conn, $_POST['recipient_id']) : '';
     $amount = isset($_POST['amount']) ? floatval($_POST['amount']) : 0;
+    
+$short_note = isset($_POST['short_note']) ? mysqli_real_escape_string($conn, $_POST['short_note']) : '';
 
-    if ($amount <= 0 || empty($recipient_acc)) {
-        echo "<script>alert('Error: Invalid amount or recipient.');</script>";
+
+    if (empty($recipient_acc) || $amount <= 0) {
+        echo "<script>alert('Error: Please enter a valid recipient and amount.');</script>";
     } else {
         $conn->begin_transaction();
-        try {
-            // STEP A: Get Sender Info
-            $sender_stmt = $conn->prepare("SELECT account_id, balance FROM accounts WHERE customer_id = ? FOR UPDATE");
-            $sender_stmt->bind_param("i", $sender_id);
-            $sender_stmt->execute();
-            $sender_res = $sender_stmt->get_result();
-            if($sender_res->num_rows === 0) throw new Exception("Your account was not found.");
+        try{
+           
+            $stmt = $conn->prepare("SELECT account_id, balance FROM accounts WHERE customer_id = ? FOR UPDATE");
+            $stmt->bind_param("i", $sender_id);
+            $stmt->execute();
+            $s_res = $stmt->get_result()->fetch_assoc();
+
+            $sender_acc_id = $s_res['account_id'];
+
+            if ($s_res['balance'] < $amount) throw new Exception("Insufficient balance.");
             
-            $sender_data = $sender_res->fetch_assoc();
-            $sender_acc_id = $sender_data['account_id'];
-
-            if ($sender_data['balance'] < $amount) throw new Exception("Insufficient balance.");
-
-            // STEP B: Get Recipient Info
-            $recipient_stmt = $conn->prepare("SELECT account_id FROM accounts WHERE account_number = ?");
-            $recipient_stmt->bind_param("s", $recipient_acc);
+         
+         
+            $recipient_stmt = $conn->prepare("SELECT account_id, account_status FROM accounts WHERE username = ? OR account_number = ?");
+            $recipient_stmt->bind_param("ss", $recipient_acc, $recipient_acc);
             $recipient_stmt->execute();
-            $recipient_res = $recipient_stmt->get_result();
-            if($recipient_res->num_rows === 0) throw new Exception("Recipient account not found.");
+            $r_res = $recipient_stmt->get_result();
+
+            if ($r_res->num_rows === 0) throw new Exception("Recipient not found.");
             
-            $recipient_acc_id = $recipient_res->fetch_assoc()['account_id'];
+            $r_data = $r_res->fetch_assoc();
+            $recipient_acc_id = $r_data['account_id'];
 
-            if ($sender_acc_id == $recipient_acc_id) throw new Exception("Cannot send to yourself.");
+            if ($r_data['account_status'] !== 'active') throw new Exception("Recipient account is inactive.");
+            if ($sender_acc_id == $recipient_acc_id) throw new Exception("Cannot send money to yourself.");
 
-            // STEP C: Perform Updates
-            $u1 = $conn->query("UPDATE accounts SET balance = balance - $amount WHERE account_id = $sender_acc_id");
-            if(!$u1) throw new Exception("Deduction failed: " . $conn->error);
+          
+            $u1 = $conn->prepare("UPDATE accounts SET balance = balance - ? WHERE account_id = ?");
+            $u1->bind_param("di", $amount, $sender_acc_id);
+            if(!$u1->execute()){ throw new Exception("Deduction failed.");
+            
+echo"<script type='text/javascript'>alert('deduction failed because ');</script>";
+            }
 
-            $u2 = $conn->query("UPDATE accounts SET balance = balance + $amount WHERE account_id = $recipient_acc_id");
-            if(!$u2) throw new Exception("Deposit failed: " . $conn->error);
+            $u2 = $conn->prepare("UPDATE accounts SET balance = balance + ? WHERE account_id = ?");
+            $u2->bind_param("di", $amount, $recipient_acc_id);
+            if(!$u2->execute()) throw new Exception("Deposit failed.");
 
-            // STEP D: Log Transaction
-            $log_stmt = $conn->prepare("INSERT INTO transaction_records (sender_id, recipient_id, amount) VALUES (?, ?, ?)");
-            $log_stmt->bind_param("iid", $sender_acc_id, $recipient_acc_id, $amount);
-            if(!$log_stmt->execute()) throw new Exception("Logging failed: " . $log_stmt->error);
+          /* for loging into transaction table*/
+          
+            $log_stmt = $conn->prepare("INSERT INTO transaction_records (sender_id, recipient_id, amount, short_note) VALUES (?, ?, ?, ?)");
+            $log_stmt->bind_param("iids", $sender_acc_id, $recipient_acc_id, $amount, $short_note);
+            if(!$log_stmt->execute()) throw new Exception("Logging failed.");
 
-            // SUCCESS
             $conn->commit();
-            echo "<script>alert('✅ Success! Balance updated and logged.'); window.location.href='t_b_history.php';</script>";
+            echo "<script>alert('Succesfully paid $recipent_name the amount of $amount'); window.location.href='t_b_history.php';</script>";
 
-        } catch (Exception $e) {
+        }catch (Exception $e) {
             $conn->rollback();
             $err = addslashes($e->getMessage());
-            echo "<script>alert('❌ TRANSACTION REJECTED: $err');</script>";
+            echo "<script>alert('TRANSACTION REJECTED: $err');</script>";
         }
     }
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -87,8 +127,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             position: relative;
         }
 
-        /* Hover Interaction */
-        .flex-card:hover {
+        
+        .flex-card:hover{
             transform: scale(1.05);
             box-shadow: 0 15px 40px rgba(0,0,0,0.12);
         }
@@ -156,6 +196,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h3>From (You)</h3>
                 <p><strong><?php echo htmlspecialchars($personal_data['customer_full_name']); ?></strong></p>
                 <p style="color: #7f8c8d;"><?php echo htmlspecialchars($account_data['account_number']); ?></p>
+               
                 <hr>
                 <p>Current Balance</p>
                 <div style="font-size: 1.5rem; color: #2ecc71;">₹<?php echo number_format($account_data['balance'], 2); ?></div>
@@ -168,6 +209,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h3>To Recipient</h3>
                 <input type="text" name="recipient_id" class="input-box" placeholder="Enter UPI ID / Username" required id="upi-input">
                 <input type="number" name="amount" class="input-box" placeholder="Enter Amount (₹)" step="0.01" required>
+                 <input type="text" name="short_note" class="input-box" placeholder="write a short note" style="color: #7f8c8e;">
             </div>
 
         </div>
@@ -189,7 +231,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if(e.target.value.length > 0) {
             icon.innerText = '👤';
             icon.style.background = '#eafaf1';
-        } else {
+        } else{
             icon.innerText = '?';
             icon.style.background = '#f4f7f6';
         }

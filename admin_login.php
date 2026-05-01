@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
     
     <title>Admin Portal | Login</title>
@@ -41,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = $_POST['password']; 
  
-    $query = "SELECT admin_id, full_name, password FROM admin_accounts WHERE username = ?";
+    $query = "SELECT bank_admin_id,bank_admin_full_name, bank_admin_password FROM bank_admin_info WHERE username = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $username);
     $stmt->execute();

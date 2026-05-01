@@ -2,7 +2,7 @@
 session_start();
 include 'dbconnect.php';
 
-// 1. Security: Ensure only a LOGGED-IN CUSTOMER can access this
+
 if (!isset($_SESSION['customer_id'])) {
     header("Location: login.html");
     exit();
@@ -10,7 +10,7 @@ if (!isset($_SESSION['customer_id'])) {
 
 $customer_id = $_SESSION['customer_id'];
 
-// 2. Fetch User and Account Details
+ 
 $query = "SELECT c.customer_full_name, a.balance, a.account_number 
           FROM customers_basic_info c 
           JOIN accounts a ON c.customer_id = a.customer_id 
@@ -20,10 +20,9 @@ $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $customer_id);
 $stmt->execute();
 $result = $stmt->get_result();
-
-// Check if user actually exists in the accounts table
+ 
 if ($result->num_rows === 0) {
-    echo "Account data not found. Please contact admin.";
+    echo "Account data not found. Please create account or contanct admin.";
     exit();
 }
 
@@ -36,7 +35,7 @@ $stmt->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Personal Banking</title>
-    <link rel="stylesheet" href="dashboard-style.css">
+    <link rel="stylesheet" href="dashboardstyle.css">
     <style>
         :root { --primary: #2c3e50; --secondary: #34495e; --accent: #27ae60; --text: #ecf0f1; }
         body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; }
@@ -113,7 +112,7 @@ $stmt->close();
         <a href="upi.php" class="panel-card">
             <div class="icon-circle">💸</div>
             <h3>Send Money</h3>
-            <p>Quick UPI Transfer</p>
+            <p>Quick Money Transfer </p>
         </a>
 
         <a href="t_b_history.php" class="panel-card">
@@ -130,7 +129,7 @@ $stmt->close();
     </div>
 
     <div style="text-align: center; margin-top: 50px;">
-        <a href="logout.php" class="logout-btn">Secure Logout</a>
+        <a href="logout.php" class="logout-btn">Logout</a>
     </div>
 </div>
 

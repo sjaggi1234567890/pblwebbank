@@ -1,0 +1,100 @@
+:root {
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --debit: #ef4444;
+    --credit: #10b981;
+    --primary: #3b82f6;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.main-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header-content h1 { margin: 0; font-size: 1.8rem; }
+.header-content p { margin: 5px 0 0; color: var(--text-muted); }
+
+.btn-secondary {
+    text-decoration: none;
+    padding: 10px 18px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, #1e293b, #334155);
+    color: white;
+    padding: 25px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.label { display: block; font-size: 0.8rem; opacity: 0.7; text-transform: uppercase; }
+.balance-amt { font-size: 1.8rem; font-weight: bold; display: block; margin-top: 5px; }
+
+.table-container {
+    background: var(--card-bg);
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.history-table th {
+    background: #f1f5f9;
+    padding: 15px 20px;
+    text-align: left;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.history-table td {
+    padding: 20px;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.date-col .day { display: block; font-weight: bold; }
+.date-col .time { font-size: 0.8rem; color: var(--text-muted); }
+
+.note { margin: 4px 0 0; font-size: 0.85rem; color: var(--text-muted); font-style: italic; }
+
+.badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-debit { background: #fee2e2; color: var(--debit); }
+.status-credit { background: #dcfce7; color: var(--credit); }
+
+.amt-col { font-weight: bold; text-align: right; }
+.txt-right { text-align: right; }
+
+.empty-state { padding: 50px; text-align: center; color: var(--text-muted); }

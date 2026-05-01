@@ -24,9 +24,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
         $conn->query("DELETE FROM customers_basic_info WHERE customer_id = $uid");
         $conn->commit();
         $message = "<div class='alert success'>User ID $uid has been purged from the system.</div>";
+        
     } catch (Exception $e) {
         $conn->rollback();
         $message = "<div class='alert error'>Failed to delete user.</div>";
+        echo" <script type='text/javascript'>alert($message);
     }
 }
 
