@@ -31,36 +31,43 @@
 
 </body>
 </html>
+
+
+
+ 
+
+
+
+
 <?php
 session_start();
 include 'dbconnect.php';
 
-$error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
  
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = $_POST['password']; 
  
-    $query = "SELECT bank_admin_id,bank_admin_full_name, bank_admin_password FROM bank_admin_info WHERE username = ?";
+    $query = "SELECT bank_admin_id,bank_admin_full_name, bank_admin_password FROM bank_admin_info WHERE bank_admin_full_name = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) { 
-        if ($password === $row['password']) {
+        if ($password === $row['bank_admin_password']) {
             $_SESSION['is_admin'] = true;
-            $_SESSION['admin_id'] = $row['admin_id'];
-            $_SESSION['admin_name'] = $row['full_name'];
-            
+            $_SESSION['admin_id'] = $row['bank_admin_id'];
+            $_SESSION['admin_name'] = $row['bank_admin_full_name'];
+              echo"<script type='text/javascript'>alert('Welcom Admin'); > ";
             header("Location: admin_dashboard.php");
             exit();
-        } else {
-            $error = "Invalid password. Please try again.";
+        }else{
+             echo"<script type='text/javascript'>alert('incorrect password'); > ";
         }
-    } else {
-        $error = "Admin account not found.";
+    } else{
+          echo"<script type='text/javascript'>alert('account not foudn'); > ";
     }
 }
 ?>

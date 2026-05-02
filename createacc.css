@@ -59,23 +59,23 @@ body{
     border-radius: 5px;
     box-sizing: square-box; 
 }
-  .address-row {
+  .address-row{
     display: flex;
     justify-content: space-between;
-    gap: 10px; /* Space between the three boxes */
+    gap: 10px;
     margin: 10px 0;
 }
 
-.address-input-box {
-    width: 32%; /* Fits three boxes on one line */
+.address-input-box{
+    width: 32%; 
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    box-sizing: border-box; /* Fixed from square-box */
+    box-sizing: border-box;  
     background-color: white;
 }
 
-/* Adjusting the look for the dropdowns specifically */
+/* Adjusting the look for the dropdowns */
 select.address-input-box {
     cursor: pointer;
     color: #555;

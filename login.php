@@ -24,16 +24,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (password_verify($pass_input, $row['customer_password'])) {
              
             $_SESSION['customer_id'] = $row['customer_id'];
-            $_SESSION['account_id'] = $row['account_id']; // CRITICAL: Needed for UPI
+            $_SESSION['account_id'] = $row['account_id']; 
             $_SESSION['username'] = $row['username'];
 
             header("Location: dashboard.php");
             exit();
-        } else {
-            echo "<script>alert('Invalid Password'); window.location='login.html';</script>";
+        }else{
+            echo"<script>alert('Invalid Password'); window.location='login.html';</script>";
         }
-    } else {
-        echo "<script>alert('Username not found'); window.location='login.html';</script>";
+    } else{
+        echo"<script>alert('Username not found'); window.location='login.html';</script>";
     }
     $stmt->close();
 }

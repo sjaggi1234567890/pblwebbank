@@ -1,3 +1,7 @@
+
+
+
+
 <?php
  
 include 'dbconnect.php';
@@ -14,14 +18,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $dob = $_POST['dob'];
     $pan = $_POST['pan_card'];
     $state = $_POST['state'];
+    $pincode= $_POST['pincode'];
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
    
     $date1 = new DateTime($dob);
     $date2 = new DateTime();
     $interval = $date1->diff($date2);
-    if($interval->y < 18) {
-        die("Error: age should be  atleast 18 year old");
+    if($interval->y < 16) {
+        die("Error: age should be  atleast 16 year old");
     }
     
        $sql = "INSERT INTO customers_basic_info (customer_full_name, customer_last_name, customer_mobile_number, customer_date_of_birth, customer_email, customer_password, customer_pan_card, state) 
@@ -65,7 +70,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $check_stmt->close();
         }
             
-        $acc_num = rand(1000000000, 9999999999);
+        $acc_num = rand(1000, 999999999);
 $exists = true;
 while ($exists) {
     $check_sql = "SELECT account_id FROM accounts WHERE account_number = ?";
@@ -97,13 +102,13 @@ while ($exists) {
             echo "Your Username: <strong>" . $final_username . "</strong><br>";
             echo "Your Account Number: <strong>" . $acc_num . "</strong><br>";
             echo "<a href='login.html' target='_blank'> Click here to Login</a>";
-        } else {
+        } else{
             $message= "account creation failed";
             echo "<script type='text/javascript'>alert('$message'. $acc_stmt->error);</script>";
               
         }
         $acc_stmt->close();
-    } else {
+    }else{
                 $message = "Error while inserting to database, check for duplication or any left fields again".$stmt->error;
 
     echo "<script type='text/javascript'>alert('$message'); </script>";

@@ -1,15 +1,15 @@
 <?php
-// Ensure session is active
-if (!isset($_SESSION['is_admin'])) { exit('Access Denied'); }
+
+if (!isset($_SESSION['is_admin'])){ exit('Access Denied'); }
 
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adjust_balance'])) {
     $acc_no = mysqli_real_escape_string($conn, $_POST['acc_no']);
     $amount = floatval($_POST['amount']);
-    $action = $_POST['action_type']; // 'add' or 'deduct'
+    $action = $_POST['action_type']; // for adding money or debt
 
-    if ($amount > 0) {
+    if ($amount > 0){
         $conn->begin_transaction();
         try {
             if ($action == 'add') {
@@ -85,9 +85,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adjust_balance'])) {
  
     if ($conn->connect_error) { die("Connection failed: " . $conn->connect_error); }
 
-    if ($action == 'add') {
+    if ($action == 'add'){
         $query = "UPDATE accounts SET balance = balance + $amount WHERE account_number = '$acc_no'";
-    } else {
+    }else{
         $query = "UPDATE accounts SET balance = balance - $amount WHERE account_number = '$acc_no'";
     }
 
@@ -150,5 +150,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['adjust_balance'])) {
         width: 100%; padding: 12px; margin: 8px 0 20px; 
         border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; 
     }
-    .form-group label { font-weight: bold; color: var(--primary); }
+    .form-group label{ font-weight: bold; color: var(--primary); }
 </style>

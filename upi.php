@@ -33,7 +33,7 @@ $account_data  = [
     'balance' => $sender_data['balance']
 ];
  
-if ($_SERVER["REQUEST_METHOD"] == "POST") { 
+if ($_SERVER["REQUEST_METHOD"] == "POST"){ 
     $recipient_acc = isset($_POST['recipient_id']) ? mysqli_real_escape_string($conn, $_POST['recipient_id']) : '';
     $amount = isset($_POST['amount']) ? floatval($_POST['amount']) : 0;
     
@@ -90,7 +90,7 @@ echo"<script type='text/javascript'>alert('deduction failed because ');</script>
 
             $conn->commit();
             echo "<script>alert('Succesfully paid $recipent_name the amount of $amount'); window.location.href='t_b_history.php';</script>";
-
+/*** */
         }catch (Exception $e) {
             $conn->rollback();
             $err = addslashes($e->getMessage());

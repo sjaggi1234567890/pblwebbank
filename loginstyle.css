@@ -52,7 +52,7 @@ body{
     
 
   
-.sign-up-btn, .create-acc{
+.sign-up-btn .create-acc{
     width: 100%;
     padding: 10px;
     margin-top: 10px;
@@ -70,6 +70,23 @@ body{
 
 }
 
+ .create-acc{
+    width: 75%;
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    border: square;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+ transition-property: width;
+    transition-duration: 0.9s;
+    transition-timing-function: ease;
+    transition-delay: 0.5s;
+
+
+}
 
 .create-acc:hover{
     width: 101%;
